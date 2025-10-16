@@ -11,6 +11,20 @@
 
 \section{Introducere}
 
+\textbf{------------------------------------------------------------------------------------}
+
+\section{Diferenta dintre problema rutarii vehiculelor si problema comis-voiajorului}
+
+Problema comis-voiajorului e o versiune (cel putin in opinia mea)mai simplificata a problemei rutarii vehiculelor.
+
+\textbf{Problema comis-voiajorului }constă în găsirea celei mai scurte rute care trece printr-un set de puncte o singura data (in cazul teoretic orașe), aflate la distanțe cunoscute între ele, astfel încât fiecare punct să fie vizitat o singură dată, iar traseul să se încheie în punctul de plecare. 
+
+\textbf{Problema rutarii vehiculelor}  -la baza- consta in gasirea rutelor cu un cost total minim pentru un set de vehicule (in cazul teoretic camioane cu marfa) care pornesc din acelasi loc (depozit) iar fiecare punct (client) sa fie atins o singura data, de aici incolo putand fi adaugate diferite constrangeri.
+
+\textbf{Deci care e diferenta?} Pentru problema comis-voiajorului ai o singura persoana care are nevoie de cea mai scurta ruta completa prin toate punctele in timp ce pentru problema rutarii vehiculelor ai mai multe camioane care au nevoie fiecare in parte de cea mai scurta ruta pe la un anumit numar de puncte optim astfel incat atunci cand toate isi fac rutele sa fie parcurse toate punctele.
+
+\section{Tipuri de VRP}
+
 Exista mai multe variatii de VRP, printre care:
  \begin{itemize}
      \item CVRP ( Capacitated Vehicle Routing Problem )
@@ -35,6 +49,35 @@ Exista mai multe variatii de VRP, printre care:
      \item PTP ( Profitable Tour Problem )
  \end{itemize}
 
+\section{Ce inseamna ele?}
+
+\textbf{CVRP} este cea mai usoara si des intalnita varianta a VRP , are constrangerea ca vehiculele sa aiba  o capacitate limitata de marfa pe care o pot cara  si scopul e gasirea drumurilor  cu cost minim.
+
+\textbf{VRPP} e o varianta a VRP in care fiecare client reprezinta un anumit profit iar drumul pana la el un anumit cost si scopul este maximizarea profitului .
+
+\textbf{VRPTW} e o varianta a VRP in care fiecare client trebuie vizitat in anumite ferestre de timp si scopul este gasirea drumurilor  cu cost minim.
+
+\textbf{VRPWT} e o varianta a VRP in care camioanele pot lasa/lua marfa de la diferite puncte de transfer si scopul e gasirea drumurilor  cu cost minim.
+
+\textbf{VRPMT } e o varianta a VRP in care fiecare camion poate efectua mai multe drumuri intr-o zi (cum ar fi drumurile de la client inapoi la depozit pentru a mai lua marfa) si scopul e gasirea drumurilor  cu cost minim.
+
+\textbf{VRPPD} e o varianta a VRP in care fiecare client nu doar ca asteapta o livrare dar vrea sa si faca o livrare, astfel incat atunci cand camionul ajunge la client sa lase un colet si sa ia altul care urmeaza sa fie livrat iar scopul e gasirea drumurilor  cu cost minim.
+
+\textbf{VRPB} e o varianta a VRP in care exista doua tipuri de clientI: cei care doar primesc pachete si cei care doar trimit pachete iar scopul e gasirea drumurilor  cu cost minim.
+
+\textbf{PVRP}
+\textbf{SVRP}
+\textbf{SDVRP}
+\textbf{MDVRP}
+\textbf{IRP}
+\textbf{OVRP}
+\textbf{OP}
+\textbf{EVRP}
+\textbf{TOP}
+\textbf{CTOP}
+\textbf{TOPTW}
+\textbf{PCTSP}
+\textbf{PTP}
  
 \section{Bibliografie}
 \url{https://blog.locus.sh/vehicle-routing-problem/}
@@ -42,5 +85,22 @@ Exista mai multe variatii de VRP, printre care:
 \url{https://en.wikipedia.org/wiki/Vehicle_routing_problem}
 
 \url{https://tttp-au.com/wp-content/uploads/2024/06/Pages-from-TTTP-Vol-9_No-1_2024-WEB-8.pdf}
+
+\url{https://ro.wikipedia.org/wiki/Problema_rut%C4%83rii_vehiculelor}
+
+\url{https://ro.wikipedia.org/wiki/Problema_comis-voiajorului}
+
+\url{https://developers.google.com/optimization/routing/cvrp}
+
+\url{https://www.upperinc.com/glossary/route-optimization/vehicle-routing-problem-with-profits-vrpp/}
+
+\url{https://developers.google.com/optimization/routing/vrptw}
+
+\url{https://www.sciencedirect.com/science/article/abs/pii/S0305054825000085}
+
+\url{https://www.sciencedirect.com/science/article/abs/pii/S0305054820301040}
+
+\url{https://www.upperinc.com/glossary/route-optimization/vehicle-routing-problem-with-backhauls-vrpb/}
+
 
 \end{document}
