@@ -1,9 +1,11 @@
 \documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage{url}
 
 \title{Vehicle Routing Problem - VRP}
 \author{Emma Szigeti}
-\date{October 2025}
+\date{Octombrie 2025}
 
 \begin{document}
 
@@ -13,71 +15,81 @@
 
 \textbf{------------------------------------------------------------------------------------}
 
-\section{Diferenta dintre problema rutarii vehiculelor si problema comis-voiajorului}
+\section{Diferența dintre problema rutării vehiculelor și problema comis-voiajorului}
 
-Problema comis-voiajorului e o versiune (cel putin in opinia mea)mai simplificata a problemei rutarii vehiculelor.
+Problema comis-voiajorului este o versiune, cel puțin din punctul meu de vedere, mai simplificată a problemei rutării vehiculelor.
 
-\textbf{Problema comis-voiajorului }constă în găsirea celei mai scurte rute care trece printr-un set de puncte o singura data (in cazul teoretic orașe), aflate la distanțe cunoscute între ele, astfel încât fiecare punct să fie vizitat o singură dată, iar traseul să se încheie în punctul de plecare. 
+\textbf{Problema comis-voiajorului} constă în găsirea celei mai scurte rute care traversează un set de puncte o singură dată (în mod teoretic, orașe), situate la distanțe cunoscute între ele, astfel încât fiecare punct să fie vizitat o singură dată, iar traseul să se încheie în punctul de plecare.
 
-\textbf{Problema rutarii vehiculelor}  -la baza- consta in gasirea rutelor cu un cost total minim pentru un set de vehicule (in cazul teoretic camioane cu marfa) care pornesc din acelasi loc (depozit) iar fiecare punct (client) sa fie atins o singura data, de aici incolo putand fi adaugate diferite constrangeri.
+\textbf{Problema rutării vehiculelor} – în forma sa de bază – constă în găsirea unui set de rute cu cost total minim pentru un grup de vehicule (în mod teoretic, camioane cu marfă) care pornesc din același punct (depozit), astfel încât fiecare client să fie vizitat o singură dată. Ulterior, pot fi adăugate diverse constrângeri.
 
-\textbf{Deci care e diferenta?} Pentru problema comis-voiajorului ai o singura persoana care are nevoie de cea mai scurta ruta completa prin toate punctele in timp ce pentru problema rutarii vehiculelor ai mai multe camioane care au nevoie fiecare in parte de cea mai scurta ruta pe la un anumit numar de puncte optim astfel incat atunci cand toate isi fac rutele sa fie parcurse toate punctele.
+\textbf{Care este, așadar, diferența?} În problema comis-voiajorului există o singură persoană care trebuie să parcurgă cea mai scurtă rută completă prin toate punctele, în timp ce în problema rutării vehiculelor există mai multe camioane, fiecare având nevoie de o rută optimă care să acopere un anumit număr de puncte, astfel încât, împreună, să fie parcurse toate punctele.
 
 \section{Tipuri de VRP}
 
-Exista mai multe variatii de VRP, printre care:
+Există mai multe variații de VRP, printre care:
  \begin{itemize}
-     \item CVRP ( Capacitated Vehicle Routing Problem )
-     \item VRPP ( Vehicle Routing Problem with Profits )
-     \item VRPTW ( Vehicle Routing Problem with Time Windows )
-     \item VRPWT ( Vehicle Routing Problem with Transfers )
-     \item VRPMT ( Vehicle Routing Problem with Multiple Trips )
-     \item VRPPD ( Vehicle Routing Problem with Pickup and Delivery )
-     \item VRPB ( Vehicle Routing Problem with Backhauls )
-     \item PVRP ( Periodic Vehicle Routing Problem )
-     \item SVRP ( Stochastic Vehicle Routing Problem )
-     \item SDVRP ( Split Delivery Vehicle Routing Problem )
-     \item  MDVRP ( Multiple Depot Vehicle Routing Problem )
-     \item IRP ( Inventory Routing Problem )
-     \item OVRP ( Open Vehicle Routing Problem )
-     \item OP ( Orienteering Problem )
-     \item EVRP ( Electric Vehicle Routing Problem )
-     \item TOP ( The Team Orienteering Problem )
-     \item CTOP ( The Capacitated Team Orienteering Problem )
-     \item TOPTW ( The Capacitated Team Orienteering Problem with Time Windows )
-     \item PCTSP ( Collecting Traveling Salesman Problem )
-     \item PTP ( Profitable Tour Problem )
+     \item CVRP (Capacitated Vehicle Routing Problem)
+     \item VRPP (Vehicle Routing Problem with Profits)
+     \item VRPTW (Vehicle Routing Problem with Time Windows)
+     \item VRPWT (Vehicle Routing Problem with Transfers)
+     \item VRPMT (Vehicle Routing Problem with Multiple Trips)
+     \item VRPPD (Vehicle Routing Problem with Pickup and Delivery)
+     \item VRPB (Vehicle Routing Problem with Backhauls)
+     \item PVRP (Periodic Vehicle Routing Problem)
+     \item SVRP (Stochastic Vehicle Routing Problem)
+     \item SDVRP (Split Delivery Vehicle Routing Problem)
+     \item MDVRP (Multiple Depot Vehicle Routing Problem)
+     \item IRP (Inventory Routing Problem)
+     \item OVRP (Open Vehicle Routing Problem)
+     \item OP (Orienteering Problem)
+     \item TOP (The Team Orienteering Problem)
+     \item CTOP (The Capacitated Team Orienteering Problem)
+     \item TOPTW (The Capacitated Team Orienteering Problem with Time Windows)
+     \item EVRP (Electric Vehicle Routing Problem)
  \end{itemize}
 
-\section{Ce inseamna ele?}
+\section{Ce înseamnă ele?}
 
-\textbf{CVRP} este cea mai usoara si des intalnita varianta a VRP , are constrangerea ca vehiculele sa aiba  o capacitate limitata de marfa pe care o pot cara  si scopul e gasirea drumurilor  cu cost minim.
+\textbf{CVRP} este cea mai ușoară și des întâlnită variantă a VRP. Are constrângerea ca vehiculele să aibă o capacitate limitată de marfă pe care o pot transporta, iar scopul este găsirea drumurilor cu cost minim.
 
-\textbf{VRPP} e o varianta a VRP in care fiecare client reprezinta un anumit profit iar drumul pana la el un anumit cost si scopul este maximizarea profitului .
+\textbf{VRPP} este o variantă a VRP în care fiecare client reprezintă un anumit profit, iar drumul până la el are un anumit cost. Scopul este maximizarea profitului total.
 
-\textbf{VRPTW} e o varianta a VRP in care fiecare client trebuie vizitat in anumite ferestre de timp si scopul este gasirea drumurilor  cu cost minim.
+\textbf{VRPTW} este o variantă a VRP în care fiecare client trebuie vizitat într-o anumită fereastră de timp, iar scopul este găsirea drumurilor cu cost minim.
 
-\textbf{VRPWT} e o varianta a VRP in care camioanele pot lasa/lua marfa de la diferite puncte de transfer si scopul e gasirea drumurilor  cu cost minim.
+\textbf{VRPWT} este o variantă a VRP în care camioanele pot lăsa sau lua marfă din diferite puncte de transfer, iar scopul este găsirea drumurilor cu cost minim.
 
-\textbf{VRPMT } e o varianta a VRP in care fiecare camion poate efectua mai multe drumuri intr-o zi (cum ar fi drumurile de la client inapoi la depozit pentru a mai lua marfa) si scopul e gasirea drumurilor  cu cost minim.
+\textbf{VRPMT} este o variantă a VRP în care fiecare camion poate efectua mai multe drumuri într-o zi (de exemplu, drumurile de la client înapoi la depozit pentru a încărca din nou marfă), iar scopul este găsirea drumurilor cu cost minim.
 
-\textbf{VRPPD} e o varianta a VRP in care fiecare client nu doar ca asteapta o livrare dar vrea sa si faca o livrare, astfel incat atunci cand camionul ajunge la client sa lase un colet si sa ia altul care urmeaza sa fie livrat iar scopul e gasirea drumurilor  cu cost minim.
+\textbf{VRPPD} este o variantă a VRP în care fiecare client nu doar că așteaptă o livrare, dar vrea și să trimită una. Astfel, atunci când camionul ajunge la client, lasă un colet și ia altul care urmează să fie livrat. Scopul este găsirea drumurilor cu cost minim.
 
-\textbf{VRPB} e o varianta a VRP in care exista doua tipuri de clientI: cei care doar primesc pachete si cei care doar trimit pachete iar scopul e gasirea drumurilor  cu cost minim.
+\textbf{VRPB} este o variantă a VRP în care există două tipuri de clienți: cei care doar primesc pachete și cei care doar trimit pachete. Scopul este găsirea drumurilor cu cost minim.
 
-\textbf{PVRP}
-\textbf{SVRP}
-\textbf{SDVRP}
-\textbf{MDVRP}
-\textbf{IRP}
-\textbf{OVRP}
-\textbf{OP}
-\textbf{EVRP}
-\textbf{TOP}
-\textbf{CTOP}
-\textbf{TOPTW}
-\textbf{PCTSP}
-\textbf{PTP}
+\textbf{PVRP} este o variantă a VRP în care livrările se fac pe o perioadă de timp, cum ar fi o săptămână sau o lună, iar scopul este stabilirea vehiculelor și a zilelor în care se va livra marfa fiecărui client.
+
+\textbf{SVRP} este o variantă a VRP în care unele date nu sunt cunoscute cu certitudine înainte de planificarea rutelor, ele fiind aleatoare (stocastice – adică influențate de factori întâmplători). Exemple de parametri aleatori pot fi: condițiile de trafic, vremea sau cererea clienților. Scopul este găsirea drumurilor cu cost minim, ținând cont de aceste incertitudini.
+
+\textbf{SDVRP} este o variantă a VRP în care clienții pot primi livrări de la mai multe vehicule, livrarea putând fi împărțită în mai multe părți. Scopul este găsirea drumurilor cu cost minim.
+
+\textbf{MDVRP} este o variantă a VRP în care există mai multe depozite din care se pot livra mărfurile către clienți. Scopul este găsirea drumurilor cu cost minim.
+
+\textbf{IRP} este o variantă a VRP în care fiecare client are un stoc maxim și minim ce trebuie respectat, iar scopul este găsirea drumurilor cu cost minim astfel încât fiecare client să primească livrările în funcție de nivelul stocului și de nevoia sa curentă.
+
+\textbf{OVRP} este o variantă a VRP în care, la finalul zilei, vehiculele nu se mai întorc la depozit. Scopul este găsirea drumurilor cu cost minim.
+
+\textbf{OP} este o variantă a VRP în care fiecare client are un profit asociat, iar vehiculul (doar unul) are o distanță sau un timp limită în care poate vizita clienții. Scopul este alegerea clienților care vor fi vizitați astfel încât profitul să fie maxim.
+
+\textbf{TOP} este o extensie a OP, în care livrarea se face cu mai multe vehicule, iar scopul este alegerea clienților care vor fi vizitați astfel încât profitul total să fie maxim.
+
+\textbf{CTOP} este o extensie a TOP în care fiecare vehicul are o capacitate limită, iar scopul este alegerea clienților care vor fi vizitați astfel încât profitul total să fie maxim.
+
+\textbf{TOPTW} este o extensie a CTOP în care fiecare client trebuie să își primească livrarea într-o anumită fereastră de timp. Scopul este alegerea clienților care vor fi vizitați astfel încât profitul total să fie maxim.
+
+\textbf{EVRP} este o variantă a VRP în care se folosesc vehicule electrice, care au autonomie limitată și necesită reîncărcare. Scopul este găsirea drumurilor cu cost minim, ținând cont de nevoia și timpul de reîncărcare al vehiculelor electrice.
+
+\section{Varianta aleasă}
+
+În cadrul proiectului am ales să folosim varianta CVRP (Capacitated Vehicle Routing Problem) a problemei, fiind cea mai ușoară de înțeles și de abordat.
  
 \section{Bibliografie}
 \url{https://blog.locus.sh/vehicle-routing-problem/}
@@ -102,5 +114,26 @@ Exista mai multe variatii de VRP, printre care:
 
 \url{https://www.upperinc.com/glossary/route-optimization/vehicle-routing-problem-with-backhauls-vrpb/}
 
+\url{https://www.upperinc.com/glossary/route-optimization/periodic-vehicle-routing-problem-pvrp/}
+
+\url{https://www.upperinc.com/glossary/route-optimization/stochastic-vehicle-routing-problem-svrp/}
+
+\url{https://www.sciencedirect.com/science/article/pii/S0305054814002159}
+
+\url{https://www.sciencedirect.com/science/article/abs/pii/S0305054813001408}
+
+\url{https://www.hexaly.com/templates/inventory-routing-problem-irp}
+
+\url{https://www.upperinc.com/glossary/route-optimization/open-vehicle-routing-problem-ovrp/}
+
+\url{https://www.sciencedirect.com/topics/mathematics/orienteering-problem}
+
+\url{https://drops.dagstuhl.de/storage/01oasics/oasics-vol014-atmos2010/OASIcs.ATMOS.2010.142/OASIcs.ATMOS.2010.142.pdf}
+
+\url{https://www.researchgate.net/publication/256022425_The_Capacitated_Team_Orienteering_Problem_A_Bi-Level_Filter-and-Fan_Method}
+
+\url{https://www.praiseworthyprize.org/jsm/index.php?journal=irecos&page=article&op=view&path%5B%5D=18244}
+
+\url{https://www.sciencedirect.com/science/article/pii/S2352146516000089}
 
 \end{document}
