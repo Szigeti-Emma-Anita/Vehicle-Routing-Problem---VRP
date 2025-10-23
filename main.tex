@@ -2,9 +2,10 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{url}
+\usepackage{amsmath, amssymb}
 
 \title{Vehicle Routing Problem - VRP}
-\author{Emma Szigeti}
+\author{Emma Szigeti, Flaviu Sălnicean}
 \date{Octombrie 2025}
 
 \begin{document}
@@ -90,7 +91,60 @@ Există mai multe variații de VRP, printre care:
 \section{Varianta aleasă}
 
 În cadrul proiectului am ales să folosim varianta CVRP (Capacitated Vehicle Routing Problem) a problemei, fiind cea mai ușoară de înțeles și de abordat.
- 
+
+\section{Formulare matematică pentru Capacitated Vehicle Routing Problem (CVRP)}
+
+\textbf{Date:}
+\begin{itemize}
+  \item $V = \{0, 1, \dots, n\}$ --- mulțimea nodurilor, unde $0$ este depozitul și $1,\dots,n$ sunt clienții.
+  \item $c_{ij} \ge 0$ --- costul (sau distanța) de la $i$ la $j$.
+  \item $d_i > 0$ --- cererea clientului $i$, pentru $i = 1,\dots,n$; $d_0 = 0$.
+  \item $Q > 0$ --- capacitatea fiecărui vehicul.
+  \item $K$ --- numărul maxim de vehicule disponibile.
+\end{itemize}
+
+\textbf{Variabile de decizie:}
+\[
+x_{ij} \in \{0,1\}, \quad \forall i,j \in V, \ i \neq j
+\]
+\[
+f_{ij} \ge 0, \quad \forall i,j \in V, \ i \neq j
+\]
+
+\textit{Interpretare:} $x_{ij} = 1$ dacă arcul $(i,j)$ este utilizat într-o rută; 
+$f_{ij}$ este fluxul de marfă (încărcătura) transportat pe arc-ul $i \to j$.
+\bigskip
+
+\textbf{Funcția obiectiv:}
+\[
+\min \sum_{i \in V} \sum_{\substack{j \in V \\ j \neq i}} c_{ij} \, x_{ij}
+\]
+
+\textbf{Constrângeri:}
+\begin{align}
+\sum_{\substack{j \in V \\ j \neq i}} x_{ij} &= 1, && \forall i \in \{1,\dots,n\} 
+\quad &&\text{(fiecare client este vizitat o dată)} \\[4pt]
+\sum_{\substack{i \in V \\ i \neq j}} x_{ij} &= 1, && \forall j \in \{1,\dots,n\} 
+\quad &&\text{(fiecare client este părăsit o dată)} \\[4pt]
+\sum_{\substack{j \in V \\ j \neq 0}} x_{0j} &\le K, \quad
+\sum_{\substack{i \in V \\ i \neq 0}} x_{i0} \le K 
+&& &&\text{(maxim $K$ vehicule)} \\[4pt]
+0 \le f_{ij} &\le Q \, x_{ij}, && \forall i,j \in V, \ i \neq j 
+\quad &&\text{(legătura flux--arc)} \\[4pt]
+\sum_{\substack{j \in V \\ j \neq i}} f_{ji} + d_i 
+&= \sum_{\substack{j \in V \\ j \neq i}} f_{ij}, && \forall i \in \{1,\dots,n\}
+\quad &&\text{(conservare flux la clienți)} \\[4pt]
+\sum_{\substack{j \in V \\ j \neq 0}} f_{0j} &= \sum_{i=1}^{n} d_i 
+\quad &&\text{(flux total pornit din depozit)}
+\end{align}
+
+Domenii:
+\[
+x_{ij} \in \{0,1\}, \qquad f_{ij} \ge 0
+\]
+
+\bigskip
+
 \section{Bibliografie}
 \url{https://blog.locus.sh/vehicle-routing-problem/}
 
