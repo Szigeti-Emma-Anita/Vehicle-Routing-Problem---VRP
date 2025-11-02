@@ -96,18 +96,18 @@ There are several variations of the Vehicle Routing Problem, including:
 
 For this project, we chose to work with the CVRP (Capacitated Vehicle Routing Problem) variant, as it is the easiest to understand and to implement.
 
-\section{Formulare matematică pentru Capacitated Vehicle Routing Problem (CVRP)}
+\section{Mathematical formulation for the Capacitated Vehicle Routing Problem (CVRP)}
 
-\textbf{Date:}
+\textbf{Data:}
 \begin{itemize}
-  \item $V = \{0, 1, \dots, n\}$ --- mulțimea nodurilor, unde $0$ este depozitul și $1,\dots,n$ sunt clienții.
-  \item $c_{ij} \ge 0$ --- costul (sau distanța) de la $i$ la $j$.
-  \item $d_i > 0$ --- cererea clientului $i$, pentru $i = 1,\dots,n$; $d_0 = 0$.
-  \item $Q > 0$ --- capacitatea fiecărui vehicul.
-  \item $K$ --- numărul maxim de vehicule disponibile.
+\item $V = {0, 1, \dots, n}$ --- set of nodes, where $0$ is the depot and $1,\dots,n$ are the customers.
+\item $c_{ij} \ge 0$ --- cost (or distance) from $i$ to $j$.
+\item $d_i > 0$ --- demand of customer $i$, for $i = 1,\dots,n$; $d_0 = 0$.
+\item $Q > 0$ --- capacity of each vehicle.
+\item $K$ --- maximum number of available vehicles.
 \end{itemize}
 
-\textbf{Variabile de decizie:}
+\textbf{Decision variables:}
 \[
 x_{ij} \in \{0,1\}, \quad \forall i,j \in V, \ i \neq j
 \]
@@ -115,84 +115,86 @@ x_{ij} \in \{0,1\}, \quad \forall i,j \in V, \ i \neq j
 f_{ij} \ge 0, \quad \forall i,j \in V, \ i \neq j
 \]
 
-\textit{Interpretare:} $x_{ij} = 1$ dacă arcul $(i,j)$ este utilizat într-o rută; 
-$f_{ij}$ este fluxul de marfă (încărcătura) transportat pe arc-ul $i \to j$.
+\textit{Interpretation:} $x_{ij} = 1$ if the arc $(i,j)$ is used in a route;
+$f_{ij}$ is the flow of goods transported on arc $i \to j$.
+
 \bigskip
 
-\textbf{Funcția obiectiv:}
+\textbf{Objective function:}
 \[
 \min \sum_{i \in V} \sum_{\substack{j \in V \\ j \neq i}} c_{ij} \, x_{ij}
 \]
 
-\textbf{Constrângeri:}
+\textbf{Constraints:}
 \begin{align}
 \sum_{\substack{j \in V \\ j \neq i}} x_{ij} &= 1, && \forall i \in \{1,\dots,n\} 
-\quad &&\text{(fiecare client este vizitat o dată)} \\[4pt]
+\quad &&\text{(each customer is visited exactly once)} \\[4pt]
 \sum_{\substack{i \in V \\ i \neq j}} x_{ij} &= 1, && \forall j \in \{1,\dots,n\} 
-\quad &&\text{(fiecare client este părăsit o dată)} \\[4pt]
+\quad &&\text{(each customer is left exactly once)} \\[4pt]
 \sum_{\substack{j \in V \\ j \neq 0}} x_{0j} &\le K, \quad
 \sum_{\substack{i \in V \\ i \neq 0}} x_{i0} \le K 
-&& &&\text{(maxim $K$ vehicule)} \\[4pt]
+&& &&\text{(maximum $K$ vehicles)} \\[4pt]
 0 \le f_{ij} &\le Q \, x_{ij}, && \forall i,j \in V, \ i \neq j 
-\quad &&\text{(legătura flux--arc)} \\[4pt]
+\quad &&\text{(linking flow and arc)} \\[4pt]
 \sum_{\substack{j \in V \\ j \neq i}} f_{ji} + d_i 
 &= \sum_{\substack{j \in V \\ j \neq i}} f_{ij}, && \forall i \in \{1,\dots,n\}
-\quad &&\text{(conservare flux la clienți)} \\[4pt]
+\quad &&\text{(flow conservation at customers)} \\[4pt]
 \sum_{\substack{j \in V \\ j \neq 0}} f_{0j} &= \sum_{i=1}^{n} d_i 
-\quad &&\text{(flux total pornit din depozit)}
+\quad &&\text{(total flow leaving the depot)}
 \end{align}
 
-Domenii:
+Domains:
 \[
 x_{ij} \in \{0,1\}, \qquad f_{ij} \ge 0
 \]
 
 \bigskip
 
-\section{Funcția de fitness și costul penalizat pentru CVRP}
-În cadrul algoritmilor genetici, funcția de fitness are rolul de a evalua calitatea unei soluții candidate (set de rute). Deoarece nu toate soluțiile generate respectă constrângerile de capacitate sau numărul de vehicule, se utilizează un cost penalizat care integrează aceste abateri în valoarea totală a costului.
+\section{Fitness function and penalized cost for CVRP}
+In genetic algorithms, the fitness function evaluates the quality of a candidate solution (set of routes).
+Because not all generated solutions satisfy capacity or vehicle-number constraints, a penalized cost is used to integrate these violations into the total cost.
 
 \bigskip
 
-\textbf{Fie pentru o soluţie $S$ (set de rute) costul total nepenalizat:}
+\textbf{Let $C(S)$ be the unpenalized total cost of a solution $S$ (set of routes):}
 \[
 C(S)\;=\;\sum_{r\in S}\;\sum_{(i,j)\in r} c_{ij},
 \]
-unde suma internă se face pe arcele succesive ale rutei $r$ (inclusiv arcul de la depozit 0 la primul client şi arcul de la ultimul client înapoi la 0).
+where the inner sum is over successive arcs in route $r$ (including the arc from depot 0 to the first customer and the arc from the last customer back to 0).
 
-\section*{Definiţii pe rută}
-Pentru fiecare rută $r\in S$ definim:
+\section*{Route-specific definitions}
+For each route $r \in S$, define:
 \[
 Q_r \;=\; \sum_{i\in r} d_i
-\qquad\text{(încărcătura totală pe ruta }r\text{)},
+\qquad\text{(total load on route r }r\text{)},
 \]
 \[
 \Delta_r \;=\; \max\bigl(0,\;Q_r - Q\bigr)
-\qquad\text{(depăşirea capacităţii pentru ruta }r\text{)}.
+\qquad\text{(capacity violation for rout }r\text{)}.
 \]
 
-Dacă există o limită $K$ pe numărul de vehicule, definim şi:
+If there is a limit $K$ on the number of vehicles, also define:
 \[
 \Delta_K \;=\; \max\bigl(0,\; |S| - K \bigr)
-\qquad\text{(numărul de vehicule în exces)}.
+\qquad\text{(number of vehicles in excess)}.
 \]
 
-\section*{Cost penalizat}
-Atunci costul penalizat pentru soluţia $S$ este:
+\section*{Penalized cost}
+Then the penalized cost for solution $S$ is:
 \[
 C_{\mathrm{pen}}(S)
 \;=\;
 C(S) \;+\; \alpha \sum_{r\in S} \Delta_r \;+\; \beta\,\Delta_K,
 \]
-unde $\alpha,\beta>0$ sunt coeficienţi de penalizare (de exemplu: $\alpha$ — cost pe unitate de marfă depăşită; $\beta$ — cost fix per vehicul în exces).
+where $\alpha,\beta>0$ are penalty coefficients (e.g., $\alpha$ — cost per unit of exceeded load; $\beta$ — fixed cost per vehicle in excess).
 
-\section*{Transformare în funcţie de fitness}
+\section*{Transformation into a fitness function}
 \[
 \operatorname{fitness}(S)
 \;=\;
 \frac{1}{1 + C_{\mathrm{pen}}(S)}.
 \]
-Astfel, valorile de fitness mai mari corespund soluțiilor cu cost penalizat mai mic (adică rute mai scurte și mai fezabile).
+So, higher fitness values correspond to solutions with lower penalized cost (i.e., shorter and more feasible routes).
 
 \bigskip
 
