@@ -145,6 +145,53 @@ x_{ij} \in \{0,1\}, \qquad f_{ij} \ge 0
 
 \bigskip
 
+\section{Funcția de fitness și costul penalizat pentru CVRP}
+În cadrul algoritmilor genetici, funcția de fitness are rolul de a evalua calitatea unei soluții candidate (set de rute). Deoarece nu toate soluțiile generate respectă constrângerile de capacitate sau numărul de vehicule, se utilizează un cost penalizat care integrează aceste abateri în valoarea totală a costului.
+
+\bigskip
+
+\textbf{Fie pentru o soluţie $S$ (set de rute) costul total nepenalizat:}
+\[
+C(S)\;=\;\sum_{r\in S}\;\sum_{(i,j)\in r} c_{ij},
+\]
+unde suma internă se face pe arcele succesive ale rutei $r$ (inclusiv arcul de la depozit 0 la primul client şi arcul de la ultimul client înapoi la 0).
+
+\section*{Definiţii pe rută}
+Pentru fiecare rută $r\in S$ definim:
+\[
+Q_r \;=\; \sum_{i\in r} d_i
+\qquad\text{(încărcătura totală pe ruta }r\text{)},
+\]
+\[
+\Delta_r \;=\; \max\bigl(0,\;Q_r - Q\bigr)
+\qquad\text{(depăşirea capacităţii pentru ruta }r\text{)}.
+\]
+
+Dacă există o limită $K$ pe numărul de vehicule, definim şi:
+\[
+\Delta_K \;=\; \max\bigl(0,\; |S| - K \bigr)
+\qquad\text{(numărul de vehicule în exces)}.
+\]
+
+\section*{Cost penalizat}
+Atunci costul penalizat pentru soluţia $S$ este:
+\[
+C_{\mathrm{pen}}(S)
+\;=\;
+C(S) \;+\; \alpha \sum_{r\in S} \Delta_r \;+\; \beta\,\Delta_K,
+\]
+unde $\alpha,\beta>0$ sunt coeficienţi de penalizare (de exemplu: $\alpha$ — cost pe unitate de marfă depăşită; $\beta$ — cost fix per vehicul în exces).
+
+\section*{Transformare în funcţie de fitness}
+\[
+\operatorname{fitness}(S)
+\;=\;
+\frac{1}{1 + C_{\mathrm{pen}}(S)}.
+\]
+Astfel, valorile de fitness mai mari corespund soluțiilor cu cost penalizat mai mic (adică rute mai scurte și mai fezabile).
+
+\bigskip
+
 \section{Bibliografie}
 \url{https://blog.locus.sh/vehicle-routing-problem/}
 
