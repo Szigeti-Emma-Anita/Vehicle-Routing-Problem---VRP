@@ -306,6 +306,324 @@ The sequence encodes the exact visiting order of customers for each route.
 \end{figure}
 
 \newpage
+
+\section{Selection Operators in the Genetic Algorithm}
+
+In a Genetic Algorithm (GA), the selection operator determines which individuals from the current population are chosen to produce offspring for the next generation.
+Its role is to favor individuals with higher fitness while still preserving diversity.
+
+\textbf{1. Roulette Wheel Selection}
+
+Roulette Wheel Selection assigns each individual a probability proportional to its fitness.
+
+If the population contains $m$ individuals and the fitness of individual $S_i$ is $f_i$, then:
+
+\[
+P(S_i)\;=\frac{f_i}{\sum_{k=1}^m f_k}
+\]
+
+\textbf{Advantages:}
+\begin{itemize}
+\item Simple and widely used.
+\item Higher fitness $\Rightarrow$ higher probability of selection.
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+\item Premature convergence if a few individuals dominate.
+\item Sensitive to large fitness differences.
+\end{itemize}
+
+\textbf{2. Rank Selection}
+
+Instead of using raw fitness values, individuals are sorted by fitness.
+If the best individual has rank $m$ and the worst has rank $1$, then:
+
+\[
+P(S_i)\;=\frac{r_i}{\sum_{k=1}^m k},
+\]
+
+where $r_i$ is the rank of individual $i$.
+
+\textbf{Advantages:}
+\begin{itemize}
+\item Eliminates the negative effect of extreme fitness values.
+\item Maintains constant selective pressure.
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+\item Requires sorting the population at each generation.
+\end{itemize}
+
+\textbf{3. Tournament Selection}
+
+Tournament Selection works by repeatedly choosing a small random subset of individuals and selecting the best from that subset.
+
+The procedure is:
+\begin{enumerate}
+\item Select $t$ individuals uniformly at random.
+\item Choose the one with the highest fitness.
+\item Repeat until enough parents are selected.
+\end{enumerate}
+
+Typical value: $t = 2, 3 \text{ or } 4$.
+
+\textbf{Advantages:}
+\begin{itemize}
+\item Very simple and efficient.
+\item Selective pressure is easy to control through $t$.
+\item Works well even with noisy or irregular fitness distributions.
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+\item Large $t$ reduces population diversity.
+\end{itemize}
+
+\textbf{4. Elitism}
+
+Elitism means that the best individuals automatically survive to the next generation.
+
+Let:
+
+$E =$ number of elite individuals
+
+Typical values: $E = 1$ or $E = 2$.
+
+\textbf{Advantages:}
+\begin{itemize}
+\item Guarantees that the best solution is not lost.
+\item Increases convergence speed.
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+\item Too much elitism can cause premature convergence.
+\end{itemize}
+
+\bigskip
+
+\textbf{Selection Method Used in This Project}
+
+In this project, we use:
+
+Tournament selection with size $t = 3$,
+
+combined with:
+
+$E = 1$ elite individual.
+
+Reasons:
+\begin{itemize}
+\item Tournament selection performs well for routing problems such as VRP.
+\item It provides a good balance between exploration and exploitation.
+\item Elitism ensures that the best individual found so far is preserved.
+\end{itemize}
+
+\section{Mutation Operators for CVRP}
+
+Mutation introduces small random changes in an individual, helping the genetic algorithm avoid premature convergence and explore new regions of the search space.
+In CVRP, mutation must preserve the constraint that each customer appears exactly once in the solution.
+
+\textbf{1. Swap Mutation}
+
+Swap Mutation selects two customer positions at random and exchanges them.
+
+Example:
+\[
+[0,5,7,0,3,4,0]=>[0,5,4,0,3,7,0]
+\]
+
+\textbf{Advantages:}
+\begin{itemize}
+\item Simple and effective.
+\item Preserves feasibility automatically (no duplicate customers).
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+\item Produces only small local changes.
+\end{itemize}
+
+\textbf{2. Insertion Mutation}
+
+This operator removes a customer from one position and reinserts it elsewhere in the sequence.
+
+Example:
+\[
+[0,5,7,3,4,0]=>[0,5,3,7,4,0]
+\]
+
+Procedure:
+\begin{enumerate}
+\item Choose a random customer.
+\item Remove it from its current position.
+\item Insert it at another random position (not necessarily in the same route).
+\end{enumerate}
+
+\textbf{Advantages:}
+\begin{itemize}
+\item More flexible than swap.
+\item Can create significantly different route structures.
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+\item Can disrupt good partial routes.
+\end{itemize}
+
+\textbf{3. Inversion Mutation (Reversal)}
+
+Inversion selects a random sub-sequence and reverses its order.
+
+Example:
+
+\[
+[0,5,\underline{7,3,4},0]=>[0,5,\underline{4,3,7},0]
+\]
+
+\textbf{Advantages:}
+\begin{itemize}
+\item Very effective for route optimization (similar to 2-opt).
+\item Useful for reducing route length.
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+\item Mutation effect can be large depending on interval length.
+\end{itemize}
+
+\textbf{4. 2-opt Local Search Mutation}
+
+This mutation operator transforms a route into a shorter one by removing two edges and reconnecting the route in a different order.
+
+Given customers $i$ and $j$ in a route, 2-opt replaces:
+
+\[
+(i,i+1), (j,j+1)\;with\;(i,j), (i+1,j+1).
+\]
+
+Effect: the segment between $i{+}1$ and $j$ is reversed.
+
+\textbf{Advantages:}
+\begin{itemize}
+\item Strong local optimization operator.
+\item Often improves route quality significantly.
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+\item More computationally expensive.
+\item Typically applied with a small probability.
+\end{itemize}
+
+\textbf{5. Route Splitting Mutation (Optional)}
+
+This operator selects two random cut points and reshuffles route boundaries.
+
+Example:
+
+\[
+[0,5,7,0,3,4,0]=>[0,5,7,3,0,4,0]
+\]
+
+Useful when the algorithm tends to produce too many or too few vehicles.
+
+\textbf{Advantages:}
+\begin{itemize}
+\item Encourages exploration between routes.
+\item Helps escape local optima.
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+\item Can easily violate route capacity constraints (fixed later using penalty or repair).
+\end{itemize}
+
+\bigskip
+
+\textbf{Mutation Strategy Used in This Project}
+
+For this CVRP implementation, we use a combination of two mutation operators:
+
+\[
+Primary: Swap\;Mutation\;(probability\;0.7)
+\]
+
+\[
+Secondary: Inversion\;Mutation\;(probability\;0.3)
+\]
+
+\begin{itemize}
+\item Swap is fast and maintains good diversity.
+\item Inversion helps improve route structure and reduce travel cost.
+\item Both preserve the permutation property (each customer appears exactly once).
+\end{itemize}
+
+\section{Survivor Selection Strategies}
+
+In this project, three survivor selection strategies are used. They correspond to classical evolutionary strategies, but are adapted to the CVRP genetic algorithm.
+
+\textbf{1. $(\mu, \lambda)$ Selection (Parents Die, Many Offspring, Best Offspring Survive)}
+
+In this strategy, all parents are removed after reproduction.
+Each parent produces several offspring, and then the next generation is created by selecting the best individuals among all offspring.
+
+Let:
+
+\[
+\mu=number\;of\;parents,\;\lambda=number\;of\;generated\;offspring.
+\]
+
+Only the best $\mu$ offspring survive:
+
+\[
+Next\;generation=best\;\mu\;individuals\;from\;the\;offspring.
+\]
+
+\textbf{Characteristics:}
+\begin{itemize}
+\item Parents do not survive.
+\item Strong selective pressure on offspring quality.
+\item Useful for exploration when producing many children.
+\end{itemize}
+
+\textbf{2. $(\mu + \lambda)$ Selection (Parents Survive, Best Individuals from Both Sets)}
+
+Here, parents are allowed to survive together with their offspring.
+Selection is performed on the union of parents and offspring:
+
+\[
+Next\;generation=best\;\mu\;individuals\;from\;(parents+offspring).
+\]
+
+\textbf{Characteristics:}
+\begin{itemize}
+\item Parents may remain in the population if they are good.
+\item Provides stability and prevents losing high-quality solutions.
+\item Maintains the same number of parents as the original population.
+\end{itemize}
+
+\textbf{3. Fitness-Proportional Offspring Selection (Parents Die, Offspring Chosen Probabilistically)}
+
+In this survival strategy, parents are removed, and offspring are selected to form the next generation using probabilistic selection based on fitness.
+
+Each offspring $S_i$ has a probability of survival proportional to its fitness $f_i$:
+
+\[
+P(S_i)=\frac{f_i}{\sum_{k=1}^\lambda f_k}
+\]
+
+The algorithm repeatedly samples individuals according to these probabilities until $\mu$ survivors are chosen.
+
+\textbf{Characteristics:}
+\begin{itemize}
+\item Parents die; only offspring can enter the next generation.
+\item Selection is randomized but biased toward fitter individuals.
+\item Helps maintain diversity compared to purely deterministic selection.
+\end{itemize}
+
 \section{Bibliografie}
 \url{https://blog.locus.sh/vehicle-routing-problem/}
 
