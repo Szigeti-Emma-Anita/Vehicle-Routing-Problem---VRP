@@ -205,45 +205,23 @@ Each solution consists of a set of routes that start and end at the central depo
 
 \subsection*{Array-based sequential representation}
 
-In this representation, each gene corresponds to a node: either the depot or a customer. 
-The value 0 represents the depot (start or end of a route), while numbers $1,2,3,\dots,n$ represent customers. 
+In this simplified representation, the chromosome contains only customer IDs, without using 0 or 
+any explicit separator to mark route boundaries. Each customer appears exactly once.
 
-For example:
-\[
-\begin{aligned}
-R_1 &: 0 \rightarrow 2 \rightarrow 5 \rightarrow 7 \rightarrow 0, \\
-R_2 &: 0 \rightarrow 3 \rightarrow 4 \rightarrow 8 \rightarrow 0, \\
-R_3 &: 0 \rightarrow 1 \rightarrow 6 \rightarrow 9 \rightarrow 0.
-\end{aligned}
-\]
+The CVRP routes are reconstructed dynamically: the decoding algorithm reads the sequence from left 
+to right and assigns customers to the current vehicle as long as the load does not exceed the 
+vehicle capacity. When adding the next customer would violate capacity constraints, a new vehicle 
+route is started automatically. 
 
-\subsection*{Advantages}
-\begin{itemize}
-  \item Clear and intuitive structure: The representation directly shows the order of visits for each vehicle.
-  \item Easy to verify route validity and vehicle capacity constraints: You can quickly compute the load of each vehicle.
-  \item Single-array representation: All routes are represented in a single array, simplifying storage and manipulation.
-  \item Flexible for different VRP variants: Works with CVRP, VRPTW, VRPPD, etc., by adjusting constraints or penalties.
-\end{itemize}
+This representation is compact, avoids unnecessary depot markers, and allows the route structure 
+to be generated implicitly based on capacity limits rather than explicit symbols.
 
-\subsection*{Disadvantages}
-\begin{itemize}
-  \item Sequence interpretation can be less intuitive for very large instances: Long arrays with many vehicles and customers can be harder to read manually.
-  \item Fixed depot representation: If multiple depots are involved, the array format needs modification.
-  \item Limited direct information about route optimization: The representation shows order, but does not encode distance minimization explicitly.
-\end{itemize}
-
-\subsection*{Representation of a CVRP solution using numerical customer IDs}
-
-\begin{figure}[H]
-\centering
-
-\caption*{
-Each number represents a customer, and 0 represents the depot (start and end of each route). 
-The sequence encodes the exact visiting order of customers for each route.
-}
 
 \vspace{1cm}
 
+\begin{figure}[H]
+\centering
+    
 \begin{subfigure}{\textwidth}
 \centering
 \begin{tikzpicture}[
@@ -275,7 +253,7 @@ The sequence encodes the exact visiting order of customers for each route.
 \draw (5) -- (6);
 \draw (3) -- (4);
 
-\node[below=0.1cm of depot, draw=none, inner sep=0pt] (seq) {
+\node[below=1 cm of depot, draw=none, inner sep=0pt] (seq) {
 \begin{tikzpicture}[every node/.style={rectangle, draw=black, thick,
                                        minimum width=0.8cm, minimum height=0.8cm,
                                        inner sep=0pt, outer sep=0pt, font=\bfseries},
@@ -283,22 +261,20 @@ The sequence encodes the exact visiting order of customers for each route.
                     groupB/.style={fill=orange!70},
                     groupC/.style={fill=green!40}]
 ]
-    \node (a0) {0};
-    \node[groupC, right=0pt of a0] (a5) {5};
+    \node[groupC] (a5) {5};
     \node[groupC, right=0pt of a5] (a6) {6};
-    \node[right=0pt of a6] (a00) {0};
-    \node[groupA, right=0pt of a00] (a1) {1};
+    \node[groupA, right=0pt of a6] (a1) {1};
     \node[groupA, right=0pt of a1] (a2) {2};
     \node[groupA, right=0pt of a2] (a7) {7};
-    \node[right=0pt of a7] (a01) {0};
-    \node[groupB, right=0pt of a01] (a3) {3};
+    \node[groupB, right=0pt of a7] (a3) {3};
     \node[groupB, right=0pt of a3] (a4) {4};
-    \node[right=0pt of a4] (a02) {0};
 \end{tikzpicture}
 };
 
+
 \end{tikzpicture}
-\vspace{-2.5cm}
+\vspace{- 1.8cm}
+
 \caption*{(1) Visual grouping of customers by color and route}
 \end{subfigure}
 
@@ -622,6 +598,103 @@ The algorithm repeatedly samples individuals according to these probabilities un
 \item Parents die; only offspring can enter the next generation.
 \item Selection is randomized but biased toward fitter individuals.
 \item Helps maintain diversity compared to purely deterministic selection.
+\end{itemize}
+
+\section{Crossover and Hybridization Operators}
+
+In genetic algorithms for the Capacitated Vehicle Routing Problem, 
+crossover operators combine information from two parent solutions to generate 
+new offspring. Hybridization refers to combining crossover with mutation or 
+other local improvement methods to improve solution quality.
+
+\subsection*{Random Cut-Point Crossover}
+
+This crossover operator works for permutation-based solutions. 
+A random number $n$ of cut points is selected, dividing the parent sequences 
+into $(n+1)$ segments. The offspring is created by alternating segments from 
+each parent, while keeping each customer exactly once in the child.
+
+\paragraph{Example}
+
+Parents:
+\[
+P_1 = [3,5,7,2,1,6,4,8], \quad
+P_2 = [7,1,4,6,3,8,5,2]
+\]
+
+Randomly generated cut points: $\{2,5,7\}$
+
+Split sequences:
+
+\[
+P_1: [3,5] \;|\; [7,2,1] \;|\; [6,4] \;|\; [8], \quad
+P_2: [7,1] \;|\; [4,6,3] \;|\; [8,5] \;|\; [2]
+\]
+
+Alternating segments to form offspring:
+
+\[
+O_1 = [3,5] \;||\; [4,6,3] \;||\; [6,4] \;||\; [2]
+\]
+
+Final correction ensures no duplicates and all customers are present.
+
+\paragraph{Visual Representation}
+
+\[
+\begin{array}{c}
+\text{Cut points: } 2,5,7 \\[2pt]
+\begin{array}{ccccccccccc}
+3 & 5 & | & 7 & 2 & 1 & | & 6 & 4 & | & 8 \\
+7 & 1 & | & 4 & 6 & 3 & | & 8 & 5 & | & 2
+\end{array} \\[3pt]
+\Downarrow\text{ alternate segments} \\[3pt]
+\begin{array}{ccccccccccc}
+3 & 5 & | & 4 & 6 & 3 & | & 6 & 4 & | & 2
+\end{array}
+\end{array}
+\]
+
+
+\subsection*{Hybridization: Crossover with Mutation}
+
+Hybridization improves exploration by combining crossover with mutation:
+
+\begin{enumerate}
+    \item Generate offspring using random cut-point crossover.
+    \item Apply a mutation operator (Swap or Inversion) with a given probability.
+    \item Correct any duplicate or missing customers if necessary.
+\end{enumerate}
+
+\paragraph{Example}
+
+Starting from offspring:
+\[
+O_1 = [3,5,4,6,3,6,4,2]
+\]
+
+Apply Swap mutation (swap positions 2 and 4):
+
+\[
+O_1' = [3,6,4,5,3,6,4,2]
+\]
+
+Final correction ensures each customer appears exactly once.
+
+\subsection*{Advantages of Hybridization}
+
+\begin{itemize}
+    \item Combines exploration (crossover) and local improvement (mutation).  
+    \item Reduces risk of premature convergence.  
+    \item Increases diversity in the population while keeping good solutions.  
+\end{itemize}
+
+\subsection*{Key Notes}
+
+\begin{itemize}
+    \item Random cut points make crossover flexible and unpredictable, which is good for exploring different routes.  
+    \item Hybridization is especially useful in vehicle routing because routes are sequences and small changes can create better solutions.  
+    \item After crossover and mutation, always ensure each customer appears exactly once.
 \end{itemize}
 
 \section{Bibliografie}
