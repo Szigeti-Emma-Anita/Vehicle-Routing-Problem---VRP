@@ -383,18 +383,16 @@ Typical values: $E = 1$ or $E = 2$.
 \textbf{Selection Method Used in This Project}
 
 In this project, we use:
-
-Tournament selection with size $t = 3$,
-
-combined with:
-
-$E = 1$ elite individual.
-
-Reasons:
 \begin{itemize}
-\item Tournament selection performs well for routing problems such as VRP.
-\item It provides a good balance between exploration and exploitation.
-\item Elitism ensures that the best individual found so far is preserved.
+    \item \textbf{Roulette Wheel Selection}, combined with
+    \item $E = 1$ elite individual.
+\end{itemize}
+
+\textbf{Reasons:}
+\begin{itemize}
+    \item Roulette Wheel Selection is simple and effective for optimization problems like VRP.
+    \item It favors individuals with higher fitness while still allowing diversity in selection.
+    \item Elitism ensures that the best individual found so far is preserved.
 \end{itemize}
 
 \section{Mutation Operators for CVRP}
@@ -408,7 +406,7 @@ Swap Mutation selects two customer positions at random and exchanges them.
 
 Example:
 \[
-[0,5,7,0,3,4,0]=>[0,5,4,0,3,7,0]
+[0,5,7,0,3,4,0]\Rightarrow[0,5,4,0,3,7,0]
 \]
 
 \textbf{Advantages:}
@@ -428,7 +426,7 @@ This operator removes a customer from one position and reinserts it elsewhere in
 
 Example:
 \[
-[0,5,7,3,4,0]=>[0,5,3,7,4,0]
+[0,5,7,3,4,0]\Rightarrow[0,5,3,7,4,0]
 \]
 
 Procedure:
@@ -456,7 +454,7 @@ Inversion selects a random sub-sequence and reverses its order.
 Example:
 
 \[
-[0,5,\underline{7,3,4},0]=>[0,5,\underline{4,3,7},0]
+[0,5,\underline{7,3,4},0]\Rightarrow[0,5,\underline{4,3,7},0]
 \]
 
 \textbf{Advantages:}
@@ -501,7 +499,7 @@ This operator selects two random cut points and reshuffles route boundaries.
 Example:
 
 \[
-[0,5,7,0,3,4,0]=>[0,5,7,3,0,4,0]
+[0,5,7,0,3,4,0]\Rightarrow[0,5,7,3,0,4,0]
 \]
 
 Useful when the algorithm tends to produce too many or too few vehicles.
@@ -521,21 +519,15 @@ Useful when the algorithm tends to produce too many or too few vehicles.
 
 \textbf{Mutation Strategy Used in This Project}
 
-For this CVRP implementation, we use a combination of two mutation operators:
-
-\[
-Primary: Swap\;Mutation\;(probability\;0.7)
-\]
-
-\[
-Secondary: Inversion\;Mutation\;(probability\;0.3)
-\]
+For this CVRP implementation, we use an \textbf{adaptive mutation strategy} to balance exploration and exploitation:
 
 \begin{itemize}
-\item Swap is fast and maintains good diversity.
-\item Inversion helps improve route structure and reduce travel cost.
-\item Both preserve the permutation property (each customer appears exactly once).
+    \item \textbf{Primary mutation:} Swap Mutation with base probability $0.7$
+    \item \textbf{Secondary mutation:} Inversion Mutation with base probability $0.3$
+    \item \textbf{Adaptive rate:} If the best fitness does not improve for a certain number of generations (e.g., 20), the mutation rates are temporarily increased (doubled or tripled) for a few generations. This helps the GA escape local optima and explore new solutions.
 \end{itemize}
+
+This adaptive approach ensures that the algorithm maintains diversity and improves the chances of finding better solutions without disrupting convergence when fitness is improving steadily.
 
 \section{Survivor Selection Strategies}
 
@@ -599,6 +591,10 @@ The algorithm repeatedly samples individuals according to these probabilities un
 \item Selection is randomized but biased toward fitter individuals.
 \item Helps maintain diversity compared to purely deterministic selection.
 \end{itemize}
+
+\textbf{Selection Method Used in This Project}
+
+In this project, the $(\mu + \lambda)$ selection  (Parents Survive, Best Individuals from Both Sets) strategy is used. This allows high-quality parents to remain in the population while still incorporating the best offspring, providing a balance between stability and exploration.
 
 \section{Crossover and Hybridization Operators}
 
