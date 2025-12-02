@@ -693,6 +693,29 @@ Final correction ensures each customer appears exactly once.
     \item After crossover and mutation, always ensure each customer appears exactly once.
 \end{itemize}
 
+\section{Future Improvements and Optimization}
+
+Although the current implementation provides satisfactory results for small and medium-sized instances, several enhancements could further improve the algorithm's performance and scalability for larger datasets.
+
+\textbf{Heuristic Initialization}
+
+Currently, the initial population is generated randomly. A significant improvement would be to initialize a portion of the population (e.g., 50\%) using heuristics such as the Nearest Neighbor algorithm or the Savings Algorithm (Clarke-Wright). This would provide the genetic algorithm with a higher-quality starting point, accelerating convergence.
+\bigskip
+
+\textbf{Hybridization with Local Search (Memetic Algorithm)}
+
+To refine the solutions found by the genetic operators, a Local Search mechanism could be integrated. Applying a 2-Opt or 3-Opt operator on the best individuals of each generation (or periodically) would help eliminate crossing paths within routes and strictly minimize local travel distances, transforming the GA into a Memetic Algorithm.
+\bigskip
+
+\textbf{Parameter Tuning via Grid Search}
+
+The current parameters (mutation rate, population size, crossover probability) are set based on empirical observations. A systematic Hyperparameter Tuning process (Grid Search or Bayesian Optimization) could dynamically determine the optimal configuration for a specific problem instance, balancing exploration and exploitation more effectively.
+\bigskip
+
+\textbf{Elitism Management}
+
+While Elitism ensures the best solution is preserved, excessive elitism can lead to premature convergence. Implementing Island Models (running parallel populations that exchange individuals periodically) could maintain higher genetic diversity and prevent the algorithm from getting stuck in local optima.
+
 \section{Bibliografie}
 \url{https://blog.locus.sh/vehicle-routing-problem/}
 
